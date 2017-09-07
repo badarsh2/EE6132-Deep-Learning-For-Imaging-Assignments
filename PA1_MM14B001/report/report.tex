@@ -1,0 +1,348 @@
+%% LyX 2.2.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[12pt,english]{article}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm,headheight=1.5cm,headsep=1.5cm,footskip=1.5cm}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{EE6132: Deep Learning for Image Processing}
+
+\author{\textbf{Assignment 1: MNIST Classification using Multilayer Perceptron}}
+
+\date{Adarsh B (MM14B001)}
+
+\maketitle
+\newpage{}
+
+\tableofcontents{}
+
+\newpage{}
+
+\section{Overview}
+
+Following is a pictorial description of the Multilayer Perceptron
+model used for training and classifying on MNIST data:
+\begin{center}
+\includegraphics[width=16cm]{/home/adarsh/mlp}
+\par\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+Minibatch size & 64\tabularnewline
+\hline 
+Regularization & l2\tabularnewline
+\hline 
+Regularization parameter ($\lambda$) & 0.005\tabularnewline
+\hline 
+No. of training iterations & 8000\tabularnewline
+\hline 
+Update algorithm & SGD with Momentum acceleration\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+
+\rule[0.5ex]{0.9\columnwidth}{1pt}
+
+\bigskip{}
+
+\section{Submissions}
+
+\subsection{Backpropagation equations}
+
+Feedforwarding in the neural network takes place as follows (f can
+be ReLU or sigmoid):
+
+\begin{align*}
+a_{i}^{1} & =x_{i}\\
+z_{i}^{2} & =(w_{ij}^{1}a_{j}^{1}+b_{i}^{1})\\
+a_{i}^{2} & =f(z_{i}^{2})\\
+z_{i}^{3} & =(w_{ij}^{2}a_{j}^{2}+b_{i}^{2})\\
+a_{i}^{3} & =f(z_{i}^{3})\\
+z_{i}^{4} & =(w_{ij}^{3}a_{j}^{3}+b_{i}^{3})\\
+a_{i}^{4} & =f(z_{i}^{4})\\
+z_{i}^{5} & =w_{ij}^{4}a_{j}^{4}+b_{i}^{4}\\
+a_{i}^{5} & =linear(z_{i}^{2})\\
+\hat{y}_{i} & =softmax(a_{i}^{5})
+\end{align*}
+
+For taking momentum into account, we initialize $v^{i}$ and $u^{i}$
+as the velocity terms for $w^{i}$ and $b^{i}$ respectively. $\text{\ensuremath{\delta}}^{i}$
+is the error derivative with respect to $a^{i}$. \ensuremath{\alpha}
+is the learning rate, $\lambda$ is the regularization parameter,
+and \ensuremath{\mu} is the momentum parameter.
+
+\bigskip{}
+
+\noindent \textbf{Final layer:}
+
+\noindent Since we are using cross-entropy as the loss function, the
+derivative for cross entropy loss with respect to the final activation
+can be evaluated as:
+
+\begin{align*}
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}z_{i}^{5}} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}\hat{y}_{i}}\frac{\text{\ensuremath{\partial}}\hat{y}_{i}}{\text{\ensuremath{\partial}}z_{i}^{5}}\\
+ & =-\frac{(y_{i}-\hat{y_{i}})}{\hat{y_{i}}(1-\hat{y}_{i})}\hat{y_{i}}(1-\hat{y}_{i})\\
+ & =\boldsymbol{(\hat{y_{i}}-y_{i})}
+\end{align*}
+
+\noindent 
+\begin{align*}
+\text{\ensuremath{\delta}}_{i}^{5} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}z_{i}^{5}}\\
+ & =(\hat{y_{i}}-y_{i})\\
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}w_{ij}^{4}} & =\text{\ensuremath{\delta}}_{i}^{5}\frac{\text{\ensuremath{\partial}}z_{i}^{5}}{\text{\ensuremath{\partial}}w_{ij}^{4}}\\
+ & =\boldsymbol{(\hat{y_{i}}-y_{i})a_{j}^{4}+\lambda w_{ij}^{4}}\\
+v_{ij}^{4} & =\text{\ensuremath{\mu}}v_{ij}^{4}-\text{\ensuremath{\alpha}}\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}w_{ij}^{4}}\\
+w_{ij}^{4} & =\boldsymbol{w_{ij}^{4}+v_{ij}^{4}}\\
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}b_{i}^{4}} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}z_{i}^{5}}\frac{\text{\ensuremath{\partial}}z_{i}^{5}}{\text{\ensuremath{\partial}}b_{i}^{4}}\\
+ & =\boldsymbol{(\hat{y_{i}}-y_{i})}\\
+u_{i}^{4} & =\text{\ensuremath{\mu}}u_{ij}^{4}-\text{\ensuremath{\alpha}}\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}b_{i}^{4}}\\
+b_{i}^{4} & =\boldsymbol{b_{i}^{4}+u_{i}^{4}}
+\end{align*}
+
+\noindent \textbf{Hidden layer 3:}
+\begin{align*}
+\text{\ensuremath{\delta}}_{i}^{4} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}a_{i}^{4}}\\
+ & =(\text{\ensuremath{\delta}}_{j}^{5}w_{ji}^{4})f'(z_{i}^{4})\\
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}w_{ij}^{3}} & =\text{\ensuremath{\delta}}_{i}^{4}\frac{\text{\ensuremath{\partial}}a_{i}^{4}}{\text{\ensuremath{\partial}}w_{ij}^{3}}\\
+ & =\boldsymbol{((\text{\ensuremath{\delta}}_{j}^{5}w_{ji}^{4})f'(z_{i}^{4}))a_{j}^{3}+\lambda w_{ij}^{3}}\\
+v_{ij}^{3} & =\text{\ensuremath{\mu}}v_{ij}^{3}-\text{\ensuremath{\alpha}}\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}w_{ij}^{3}}\\
+w_{ij}^{3} & =\boldsymbol{w_{ij}^{3}+v_{ij}^{3}}\\
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}b_{i}^{4}} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}a_{i}^{5}}\frac{\text{\ensuremath{\partial}}a_{i}^{5}}{\text{\ensuremath{\partial}}b_{i}^{4}}\\
+ & =\boldsymbol{((\text{\ensuremath{\delta}}_{j}^{5}w_{ji}^{4})f'(z_{i}^{4}))}\\
+u_{i}^{3} & =\text{\ensuremath{\mu}}u_{ij}^{3}-\text{\ensuremath{\alpha}}\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}b_{i}^{3}}\\
+b_{i}^{3} & =\boldsymbol{b_{i}^{3}+u_{i}^{3}}
+\end{align*}
+
+\noindent \textbf{Hidden layer 2:}
+\begin{align*}
+\text{\ensuremath{\delta}}_{i}^{3} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}a_{i}^{3}}\\
+ & =(\text{\ensuremath{\delta}}_{j}^{4}w_{ji}^{3})f'(z_{i}^{3})\\
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}w_{ij}^{2}} & =\text{\ensuremath{\delta}}_{i}^{3}\frac{\text{\ensuremath{\partial}}a_{i}^{3}}{\text{\ensuremath{\partial}}w_{ij}^{2}}\\
+ & =\boldsymbol{((\text{\ensuremath{\delta}}_{j}^{4}w_{ji}^{3})f'(z_{i}^{3}))a_{j}^{2}+\lambda w_{ij}^{2}}\\
+v_{ij}^{2} & =\text{\ensuremath{\mu}}v_{ij}^{2}-\text{\ensuremath{\alpha}}\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}w_{ij}^{2}}\\
+w_{ij}^{2} & =\boldsymbol{w_{ij}^{2}+v_{ij}^{2}}\\
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}b_{i}^{3}} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}a_{i}^{4}}\frac{\text{\ensuremath{\partial}}a_{i}^{4}}{\text{\ensuremath{\partial}}b_{i}^{3}}\\
+ & =\boldsymbol{((\text{\ensuremath{\delta}}_{j}^{4}w_{ji}^{3})f'(z_{i}^{3}))}\\
+u_{i}^{2} & =\text{\ensuremath{\mu}}u_{ij}^{2}-\text{\ensuremath{\alpha}}\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}b_{i}^{2}}\\
+b_{i}^{2} & =\boldsymbol{b_{i}^{2}+u_{i}^{2}}
+\end{align*}
+\textbf{Hidden layer 1:}
+\begin{align*}
+\text{\ensuremath{\delta}}_{i}^{2} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}a_{i}^{2}}\\
+ & =(\text{\ensuremath{\delta}}_{j}^{3}w_{ji}^{2})f'(z_{i}^{2})\\
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}w_{ij}^{1}} & =\text{\ensuremath{\delta}}_{i}^{2}\frac{\text{\ensuremath{\partial}}a_{i}^{2}}{\text{\ensuremath{\partial}}w_{ij}^{1}}\\
+ & =\boldsymbol{((\text{\ensuremath{\delta}}_{j}^{3}w_{ji}^{2})f'(z_{i}^{2}))a_{j}^{1}+\lambda w_{ij}^{1}}\\
+v_{ij}^{1} & =\text{\ensuremath{\mu}}v_{ij}^{1}-\text{\ensuremath{\alpha}}\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}w_{ij}^{1}}\\
+w_{ij}^{1} & =\boldsymbol{w_{ij}^{1}+v_{ij}^{1}}\\
+\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}b_{i}^{2}} & =\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}a_{i}^{3}}\frac{\text{\ensuremath{\partial}}a_{i}^{3}}{\text{\ensuremath{\partial}}b_{i}^{2}}\\
+ & =\boldsymbol{((\text{\ensuremath{\delta}}_{j}^{3}w_{ji}^{2})f'(z_{i}^{2}))}\\
+u_{i}^{1} & =\text{\ensuremath{\mu}}u_{ij}^{1}-\text{\ensuremath{\alpha}}\frac{\text{\ensuremath{\partial}}E}{\text{\ensuremath{\partial}}b_{i}^{1}}\\
+b_{i}^{1} & =\boldsymbol{b_{i}^{1}+u_{i}^{1}}
+\end{align*}
+
+\pagebreak{}
+
+\subsection{Learning curve plots}
+
+Following is the plot of train and test loss vs iterations for a network
+with Sigmoid activations:
+\begin{center}
+\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/train_test_loss_sigmoid_1e-2}
+\par\end{center}
+
+Following plots show the comparison of loss evolution between different
+learning rates:
+\begin{center}
+\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/train_loss_sigmoid_lr_comparison}\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/test_loss_sigmoid_lr_comparison}
+\par\end{center}
+
+The test accuracies for various cases is tabulated as shown. Clearly,
+it can be observed that convergence is faster in case of higher learning
+rates.
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+\textbf{alpha} & \textbf{Accuracy}\tabularnewline
+\hline 
+\hline 
+1e-2 & 94.89\%\tabularnewline
+\hline 
+1e-3 & 90.49\%\tabularnewline
+\hline 
+1e-4 & 84.36\%\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+
+\pagebreak{}
+
+\subsection{Learning rate scheduling}
+
+Learning rate has been decayed by a factor of 0.85 for every 250 iterations.
+The comparison between scheduled and unscheduled learning rates is
+turned in below:
+\begin{center}
+\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/train_loss_sigmoid_decay_comparison}\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/test_loss_sigmoid_decay_comparison}
+\par\end{center}
+
+The accuracies obtained in both the cases are tabulated bwlow:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+Experiment & Accuracy\tabularnewline
+\hline 
+\hline 
+Constant learning rate & 94.89\%\tabularnewline
+\hline 
+Scheduled learning rate & 90.60\%\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+
+Despite having a lower accuracy in case of scheduled learning rate,
+the convergence is smooth. With a high fixed learning rate, the system
+can be thought of having too much \textbf{kinetic energy} and the
+parameters oscillate around rapidly, unable to settle down into deeper,
+but narrower parts of the loss function. This can be seen in the unsteady
+green line from the test loss plot. Sometimes, the loss function sometimes
+can even get stagnated at a particular value. But with a decaying
+learning rate, \textbf{deeper} along with \textbf{smoother convergence}
+over long iterations helps the network to learn better. 
+
+\subsection{Experimenting with ReLU activation function}
+
+Following is the plot of train and test loss vs iterations for a network
+with ReLU activations:
+\begin{center}
+\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/train_test_loss_relu_1e-2}
+\par\end{center}
+
+\pagebreak{}
+
+Following plots show the comparison of loss evolution between different
+learning rates:
+\begin{center}
+\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/train_loss_relu_lr_comparison}\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/test_loss_relu_lr_comparison}
+\par\end{center}
+
+The test accuracies for various cases is tabulated as shown. Again,
+it can be observed that convergence is faster in case of higher learning
+rates.
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+\textbf{alpha} & \textbf{Accuracy}\tabularnewline
+\hline 
+\hline 
+1e-2 & 97.79\%\tabularnewline
+\hline 
+1e-3 & 96.87\%\tabularnewline
+\hline 
+1e-4 & 94.28\%\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+
+\noindent \textbf{Comparison between ReLU and Sigmoid:}
+
+Following plots depict the convergence comparison between ReLU and
+sigmoid activations for alpha=1e-2.
+\begin{center}
+\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/train_sigmoid_relu_comparison}\includegraphics[width=9cm]{/home/adarsh/PA1_MM14B001/outputs/test_sigmoid_relu_comparison}
+\par\end{center}
+
+Clearly, ReLU converges faster as compared to sigmoid activation.
+Test accuracies are also higher for ReLU than sigmoid (97.79\% for
+ReLU and 94.89\% for Sigmoid).
+
+\subsection{Sample predictions}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+\textbf{Sigmoid} & \textbf{ReLU}\tabularnewline
+\hline 
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_1} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_1}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_2} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_2}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_3} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_3}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_4} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_4}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_5} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_5}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_6} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_6}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_7} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_7}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_8} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_8}\tabularnewline
+\hline 
+\end{tabular}%
+\begin{tabular}{|c|c|}
+\hline 
+\textbf{Sigmoid} & \textbf{ReLU}\tabularnewline
+\hline 
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_9} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_9}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_10} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_10}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_11} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_11}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_12} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_12}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_13} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_13}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_14} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_14}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_15} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_15}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_16} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_16}\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+\textbf{Sigmoid} & \textbf{ReLU}\tabularnewline
+\hline 
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_17} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_17}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_18} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_18}\tabularnewline
+\hline 
+\end{tabular}%
+\begin{tabular}{|c|c|}
+\hline 
+\textbf{Sigmoid} & \textbf{ReLU}\tabularnewline
+\hline 
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_19} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_19}\tabularnewline
+\hline 
+\includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_20} & \includegraphics[width=4cm]{/home/adarsh/PA1_MM14B001/outputs/relu/sample_20}\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+\end{document}

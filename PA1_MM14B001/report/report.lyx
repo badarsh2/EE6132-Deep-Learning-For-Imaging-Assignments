@@ -1,0 +1,1785 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "lmodern" "Latin Modern Roman"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\headheight 1.5cm
+\headsep 1.5cm
+\footskip 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+EE6132: Deep Learning for Image Processing
+\end_layout
+
+\begin_layout Author
+
+\series bold
+Assignment 1: MNIST Classification using Multilayer Perceptron
+\end_layout
+
+\begin_layout Date
+Adarsh B (MM14B001)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Overview
+\end_layout
+
+\begin_layout Standard
+Following is a pictorial description of the Multilayer Perceptron model
+ used for training and classifying on MNIST data:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /home/adarsh/mlp.png
+	width 16cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Minibatch size
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+64
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Regularization
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+L2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Regularization parameter (
+\begin_inset Formula $\lambda$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.005
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ of training iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8000
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Update algorithm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SGD with Momentum acceleration
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Submissions
+\end_layout
+
+\begin_layout Subsection
+Backpropagation equations
+\end_layout
+
+\begin_layout Standard
+Feedforwarding in the neural network takes place as follows (f can be ReLU
+ or sigmoid):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+a_{i}^{1} & =x_{i}\\
+z_{i}^{2} & =(w_{ij}^{1}a_{j}^{1}+b_{i}^{1})\\
+a_{i}^{2} & =f(z_{i}^{2})\\
+z_{i}^{3} & =(w_{ij}^{2}a_{j}^{2}+b_{i}^{2})\\
+a_{i}^{3} & =f(z_{i}^{3})\\
+z_{i}^{4} & =(w_{ij}^{3}a_{j}^{3}+b_{i}^{3})\\
+a_{i}^{4} & =f(z_{i}^{4})\\
+z_{i}^{5} & =w_{ij}^{4}a_{j}^{4}+b_{i}^{4}\\
+a_{i}^{5} & =linear(z_{i}^{2})\\
+\hat{y}_{i} & =softmax(a_{i}^{5})
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For taking momentum into account, we initialize 
+\begin_inset Formula $v^{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $u^{i}$
+\end_inset
+
+ as the velocity terms for 
+\begin_inset Formula $w^{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $b^{i}$
+\end_inset
+
+ respectively.
+ 
+\begin_inset Formula $\text{𝛿}^{i}$
+\end_inset
+
+ is the error derivative with respect to 
+\begin_inset Formula $a^{i}$
+\end_inset
+
+.
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+𝛼 is the learning rate, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is the regularization parameter, and 𝜇 is the momentum parameter.
+ N is the number of samples in the minibatch.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Final layer:
+\end_layout
+
+\begin_layout Standard
+\noindent
+Since we are using cross-entropy as the loss function, the derivative for
+ cross entropy loss can be evaluated as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\text{𝜕}E}{\text{𝜕}z_{i}^{5}} & =\frac{\text{𝜕}E}{\text{𝜕}\hat{y}_{i}}\frac{\text{𝜕}\hat{y}_{i}}{\text{𝜕}z_{i}^{5}}\\
+ & =-\frac{(y_{i}-\hat{y_{i}})}{\hat{y_{i}}(1-\hat{y}_{i})}\hat{y_{i}}(1-\hat{y}_{i})\\
+ & =\boldsymbol{(\hat{y_{i}}-y_{i})}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Formula 
+\begin{align*}
+\text{𝛿}_{i}^{5} & =\frac{\text{𝜕}E}{\text{𝜕}z_{i}^{5}}\\
+ & =(\hat{y_{i}}-y_{i})\\
+\frac{\text{𝜕}E}{\text{𝜕}w_{ij}^{4}} & =\text{𝛿}_{i}^{5}\frac{\text{𝜕}z_{i}^{5}}{\text{𝜕}w_{ij}^{4}}\\
+ & =\boldsymbol{(\hat{y_{i}}-y_{i})a_{j}^{4}+\lambda w_{ij}^{4}}\\
+v_{ij}^{4} & =\text{𝜇}v_{ij}^{4}-\text{𝛼}.\frac{1}{N}\sum^{N}\frac{\text{𝜕}E}{\text{𝜕}w_{ij}^{4}}\\
+w_{ij}^{4} & =\boldsymbol{w_{ij}^{4}+v_{ij}^{4}}\\
+\frac{\text{𝜕}E}{\text{𝜕}b_{i}^{4}} & =\frac{\text{𝜕}E}{\text{𝜕}z_{i}^{5}}\frac{\text{𝜕}z_{i}^{5}}{\text{𝜕}b_{i}^{4}}\\
+ & =\boldsymbol{(\hat{y_{i}}-y_{i})}\\
+u_{i}^{4} & =\text{𝜇}u_{ij}^{4}-\text{𝛼}.\frac{1}{N}\sum^{N}\frac{\text{𝜕}E}{\text{𝜕}b_{i}^{4}}\\
+b_{i}^{4} & =\boldsymbol{b_{i}^{4}+u_{i}^{4}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Hidden layer 3:
+\series default
+
+\begin_inset Formula 
+\begin{align*}
+\text{𝛿}_{i}^{4} & =\frac{\text{𝜕}E}{\text{𝜕}a_{i}^{4}}\\
+ & =(\text{𝛿}_{j}^{5}w_{ji}^{4})f'(z_{i}^{4})\\
+\frac{\text{𝜕}E}{\text{𝜕}w_{ij}^{3}} & =\text{𝛿}_{i}^{4}\frac{\text{𝜕}a_{i}^{4}}{\text{𝜕}w_{ij}^{3}}\\
+ & =\boldsymbol{((\text{𝛿}_{j}^{5}w_{ji}^{4})f'(z_{i}^{4}))a_{j}^{3}+\lambda w_{ij}^{3}}\\
+v_{ij}^{3} & =\text{𝜇}v_{ij}^{3}-\text{𝛼}.\frac{1}{N}\sum^{N}\frac{\text{𝜕}E}{\text{𝜕}w_{ij}^{3}}\\
+w_{ij}^{3} & =\boldsymbol{w_{ij}^{3}+v_{ij}^{3}}\\
+\frac{\text{𝜕}E}{\text{𝜕}b_{i}^{4}} & =\frac{\text{𝜕}E}{\text{𝜕}a_{i}^{5}}\frac{\text{𝜕}a_{i}^{5}}{\text{𝜕}b_{i}^{4}}\\
+ & =\boldsymbol{((\text{𝛿}_{j}^{5}w_{ji}^{4})f'(z_{i}^{4}))}\\
+u_{i}^{3} & =\text{𝜇}u_{ij}^{3}-\text{𝛼}.\frac{1}{N}\sum^{N}\frac{\text{𝜕}E}{\text{𝜕}b_{i}^{3}}\\
+b_{i}^{3} & =\boldsymbol{b_{i}^{3}+u_{i}^{3}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Hidden layer 2:
+\series default
+
+\begin_inset Formula 
+\begin{align*}
+\text{𝛿}_{i}^{3} & =\frac{\text{𝜕}E}{\text{𝜕}a_{i}^{3}}\\
+ & =(\text{𝛿}_{j}^{4}w_{ji}^{3})f'(z_{i}^{3})\\
+\frac{\text{𝜕}E}{\text{𝜕}w_{ij}^{2}} & =\text{𝛿}_{i}^{3}\frac{\text{𝜕}a_{i}^{3}}{\text{𝜕}w_{ij}^{2}}\\
+ & =\boldsymbol{((\text{𝛿}_{j}^{4}w_{ji}^{3})f'(z_{i}^{3}))a_{j}^{2}+\lambda w_{ij}^{2}}\\
+v_{ij}^{2} & =\text{𝜇}v_{ij}^{2}-\text{𝛼}.\frac{1}{N}\sum^{N}\frac{\text{𝜕}E}{\text{𝜕}w_{ij}^{2}}\\
+w_{ij}^{2} & =\boldsymbol{w_{ij}^{2}+v_{ij}^{2}}\\
+\frac{\text{𝜕}E}{\text{𝜕}b_{i}^{3}} & =\frac{\text{𝜕}E}{\text{𝜕}a_{i}^{4}}\frac{\text{𝜕}a_{i}^{4}}{\text{𝜕}b_{i}^{3}}\\
+ & =\boldsymbol{((\text{𝛿}_{j}^{4}w_{ji}^{3})f'(z_{i}^{3}))}\\
+u_{i}^{2} & =\text{𝜇}u_{ij}^{2}-\text{𝛼}.\frac{1}{N}\sum^{N}\frac{\text{𝜕}E}{\text{𝜕}b_{i}^{2}}\\
+b_{i}^{2} & =\boldsymbol{b_{i}^{2}+u_{i}^{2}}
+\end{align*}
+
+\end_inset
+
+
+\series bold
+Hidden layer 1:
+\series default
+
+\begin_inset Formula 
+\begin{align*}
+\text{𝛿}_{i}^{2} & =\frac{\text{𝜕}E}{\text{𝜕}a_{i}^{2}}\\
+ & =(\text{𝛿}_{j}^{3}w_{ji}^{2})f'(z_{i}^{2})\\
+\frac{\text{𝜕}E}{\text{𝜕}w_{ij}^{1}} & =\text{𝛿}_{i}^{2}\frac{\text{𝜕}a_{i}^{2}}{\text{𝜕}w_{ij}^{1}}\\
+ & =\boldsymbol{((\text{𝛿}_{j}^{3}w_{ji}^{2})f'(z_{i}^{2}))a_{j}^{1}+\lambda w_{ij}^{1}}\\
+v_{ij}^{1} & =\text{𝜇}v_{ij}^{1}-\text{𝛼}.\frac{1}{N}\sum^{N}\frac{\text{𝜕}E}{\text{𝜕}w_{ij}^{1}}\\
+w_{ij}^{1} & =\boldsymbol{w_{ij}^{1}+v_{ij}^{1}}\\
+\frac{\text{𝜕}E}{\text{𝜕}b_{i}^{2}} & =\frac{\text{𝜕}E}{\text{𝜕}a_{i}^{3}}\frac{\text{𝜕}a_{i}^{3}}{\text{𝜕}b_{i}^{2}}\\
+ & =\boldsymbol{((\text{𝛿}_{j}^{3}w_{ji}^{2})f'(z_{i}^{2}))}\\
+u_{i}^{1} & =\text{𝜇}u_{ij}^{1}-\text{𝛼}.\frac{1}{N}\sum^{N}\frac{\text{𝜕}E}{\text{𝜕}b_{i}^{1}}\\
+b_{i}^{1} & =\boldsymbol{b_{i}^{1}+u_{i}^{1}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Learning curve plots
+\end_layout
+
+\begin_layout Standard
+Following is the plot of train and test loss vs iterations for a network
+ with Sigmoid activations:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/train_test_loss_sigmoid_1e-2.png
+	width 9cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Following plots show the comparison of loss evolution between different
+ learning rates:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/train_loss_sigmoid_lr_comparison.png
+	width 9cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/test_loss_sigmoid_lr_comparison.png
+	width 9cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The test accuracies for various cases is tabulated as shown.
+ Clearly, it can be observed that convergence is faster in case of higher
+ learning rates.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+alpha
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Accuracy
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1e-2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+94.89%
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1e-3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+90.49%
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1e-4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+84.36%
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Learning rate scheduling
+\end_layout
+
+\begin_layout Standard
+Learning rate has been decayed by a factor of 0.85 for every 250 iterations.
+ The comparison between scheduled and unscheduled learning rates is turned
+ in below:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/train_loss_sigmoid_decay_comparison.png
+	width 9cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/test_loss_sigmoid_decay_comparison.png
+	width 9cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The accuracies obtained in both the cases are tabulated bwlow:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Experiment
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Accuracy
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Constant learning rate
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+94.89%
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Scheduled learning rate
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+90.60%
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Despite having a lower accuracy in case of scheduled learning rate, the
+ convergence is smooth.
+ With a high fixed learning rate, the system can be thought of having too
+ much 
+\series bold
+kinetic energy
+\series default
+ and the parameters oscillate around rapidly, unable to settle down into
+ deeper, but narrower parts of the loss function.
+ This can be seen in the unsteady green line from the test loss plot.
+ Sometimes, the loss function sometimes can even get stagnated at a local
+ minima.
+ But with a decaying learning rate, 
+\series bold
+deeper
+\series default
+ along with 
+\series bold
+smoother convergence
+\series default
+ over long iterations helps the network to learn better.
+ 
+\end_layout
+
+\begin_layout Subsection
+Experimenting with ReLU activation function
+\end_layout
+
+\begin_layout Standard
+Following is the plot of train and test loss vs iterations for a network
+ with ReLU activations:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/train_test_loss_relu_1e-2.png
+	width 9cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Following plots show the comparison of loss evolution between different
+ learning rates:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/train_loss_relu_lr_comparison.png
+	width 9cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/test_loss_relu_lr_comparison.png
+	width 9cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The test accuracies for various cases is tabulated as shown.
+ Again, it can be observed that convergence is faster in case of higher
+ learning rates.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+alpha
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Accuracy
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1e-2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+97.79%
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1e-3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+96.87%
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1e-4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+94.28%
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Comparison between ReLU and Sigmoid:
+\end_layout
+
+\begin_layout Standard
+Following plots depict the convergence comparison between ReLU and sigmoid
+ activations for alpha=1e-2.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/train_sigmoid_relu_comparison.png
+	width 9cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/test_sigmoid_relu_comparison.png
+	width 9cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Clearly, ReLU converges faster as compared to sigmoid activation.
+ Test accuracies are also higher for ReLU than sigmoid (
+\series bold
+97.79%
+\series default
+ for ReLU and 
+\series bold
+94.89%
+\series default
+ for Sigmoid).
+\end_layout
+
+\begin_layout Subsection
+Sample predictions
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Sigmoid
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+ReLU
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_1.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_1.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_2.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_2.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_3.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_3.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_4.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_4.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_5.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_5.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_6.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_6.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_7.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_7.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_8.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_8.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Sigmoid
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+ReLU
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_9.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_9.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_10.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_10.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_11.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_11.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_12.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_12.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_13.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_13.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_14.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_14.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_15.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_15.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_16.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_16.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Sigmoid
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+ReLU
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_17.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_17.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_18.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_18.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Sigmoid
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+ReLU
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_19.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_19.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/sigmoid/sample_20.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/adarsh/PA1_MM14B001/outputs/relu/sample_20.png
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As can be seen from the above predictions, network with ReLU activation
+ could predict 
+\series bold
+19 out of 20 images
+\series default
+ correctly, and network with sigmoid activation could predict 
+\series bold
+17 out of 20
+\series default
+ predictions correctly.
+ 
+\end_layout
+
+\end_body
+\end_document
