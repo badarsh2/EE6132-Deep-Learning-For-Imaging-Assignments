@@ -4,3 +4,4 @@ Fall 2017 offering at IIT Madras.
 Assignments covered so far:
 
 1. Multi-Layer Perceptron (ANN)
+2. Convolutional Neural Networks (CNN) on MNIST data
